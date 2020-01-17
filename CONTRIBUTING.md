@@ -1,7 +1,6 @@
 # Contributing to Docker Bench for Security
 
-Want to hack on Docker Bench? Awesome! Here are instructions to get you
-started.
+Want to hack on Docker Bench? Awesome! Here are instructions to get you started.
 
 The Docker Bench for Security is a part of the [Docker](https://www.docker.com)
 project, and follows the same rules and principles. If you're already familiar
@@ -33,9 +32,9 @@ cd docker-bench-security
 sudo sh docker-bench-security.sh
 ```
 
-The Docker Bench has the main script called `docker-bench-security.sh`.
-This is the main script that checks for all the dependencies, deals with
-command line arguments and loads all the tests.
+The Docker Bench has the main script called `docker-bench-security.sh`. This is
+the main script that checks for all the dependencies, deals with command line
+arguments and loads all the tests.
 
 The tests are split into the following files:
 
@@ -54,11 +53,12 @@ tests/
 
 To modify the Docker Bench for Security you should first clone the repository,
 make your changes, check your code with `shellcheck`, `checkbashisms` or similar
-tools, and then sign off on your commits. After that feel free to send us a
-pull request with the changes.
+tools, and then sign off on your commits. After that feel free to send us a pull
+request with the changes.
 
-While this tool was inspired by the [CIS Docker 1.11.0 benchmark](https://www.cisecurity.org/benchmark/docker/)
-and its successors, feel free to add new tests. We will try to turn
+While this tool was inspired by the
+[CIS Docker 1.11.0 benchmark](https://www.cisecurity.org/benchmark/docker/) and
+its successors, feel free to add new tests. We will try to turn
 [dockerbench.com](https://dockerbench.com) into a list of good community
 benchmarks for both security and performance, and we would love community
 contributions.
