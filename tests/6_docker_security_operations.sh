@@ -21,13 +21,13 @@ check_6_1() {
   active_images=0
 
   for c in "$(docker inspect --format "{{.Image}}" "$(docker ps -qa)" 2>/dev/null)"; do
-    if docker images --no-trunc -a | grep "$c" > /dev/null ; then
-      active_images=$(( active_images += 1 ))
+    if docker images --no-trunc -a | grep "$c" >/dev/null; then
+      active_images=$((active_images += 1))
     fi
   done
 
-    info "$check_6_1"
-    info "     * There are currently: $images images"
+  info "$check_6_1"
+  info "     * There are currently: $images images"
 
   if [ "$active_images" -lt "$((images / 2))" ]; then
     info "     * Only $active_images out of $images are in use"

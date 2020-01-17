@@ -28,7 +28,8 @@ check_4_1() {
     # We have some containers running, set failure flag to 0. Check for Users.
     fail=0
     # Make the loop separator be a new-line in POSIX compliant fashion
-    set -f; IFS=$'
+    set -f
+    IFS=$'
   '
     root_containers=""
     for c in "$containers"; do
@@ -39,26 +40,27 @@ check_4_1() {
         if [ "$fail" -eq 0 ]; then
           warn "$check_4_1"
           warn "     * Running as root: $c"
-	  root_containers="$root_containers $c"
+          root_containers="$root_containers $c"
           fail=1
         else
           warn "     * Running as root: $c"
-	  root_containers="$root_containers $c"
+          root_containers="$root_containers $c"
         fi
       fi
     done
     # We went through all the containers and found none running as root
     if [ "$fail" -eq 0 ]; then
-        pass "$check_4_1"
-        resulttestjson "PASS"
-        currentScore=$((currentScore + 1))
+      pass "$check_4_1"
+      resulttestjson "PASS"
+      currentScore=$((currentScore + 1))
     else
-        resulttestjson "WARN" "running as root" "$root_containers"
-        currentScore=$((currentScore - 1))
+      resulttestjson "WARN" "running as root" "$root_containers"
+      currentScore=$((currentScore - 1))
     fi
   fi
   # Make the loop separator go back to space
-  set +f; unset IFS
+  set +f
+  unset IFS
 }
 
 # 4.2
@@ -138,7 +140,7 @@ check_4_6() {
       imgName=$(docker inspect --format='{{.RepoTags}}' "$img" 2>/dev/null)
       if ! [ "$imgName" = '[]' ]; then
         warn "     * No Healthcheck found: $imgName"
-	no_health_images="$no_health_images $imgName"
+        no_health_images="$no_health_images $imgName"
       fi
     fi
   done
@@ -171,7 +173,7 @@ check_4_7() {
       imgName=$(docker inspect --format='{{.RepoTags}}' "$img" 2>/dev/null)
       if ! [ "$imgName" = '[]' ]; then
         info "     * Update instruction found: $imgName"
-	update_images="$update_images $imgName"
+        update_images="$update_images $imgName"
       fi
     fi
   done
@@ -209,7 +211,7 @@ check_4_9() {
   fail=0
   add_images=""
   for img in "$images"; do
-    if docker history --format "{{ .CreatedBy }}" --no-trunc "$img" | \
+    if docker history --format "{{ .CreatedBy }}" --no-trunc "$img" |
       sed '$d' | grep -q 'ADD'; then
       if [ "$fail" -eq 0 ]; then
         fail=1

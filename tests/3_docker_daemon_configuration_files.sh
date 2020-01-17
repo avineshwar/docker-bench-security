@@ -477,7 +477,7 @@ check_3_16() {
   totalChecks=$((totalChecks + 1))
   file="/var/run/docker.sock"
   if [ -S "$file" ]; then
-    if [ "$(stat -c %a "$file")" -eq 660 ] || [  "$(stat -c %a "$file")" -eq 600 ]; then
+    if [ "$(stat -c %a "$file")" -eq 660 ] || [ "$(stat -c %a "$file")" -eq 600 ]; then
       pass "$check_3_16"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -533,7 +533,7 @@ check_3_18() {
   totalChecks=$((totalChecks + 1))
   file="/etc/docker/daemon.json"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %a "$file")" -eq 644 ] || [  "$(stat -c %a "$file")" -eq 640 ] || [ "$(stat -c %a "$file")" -eq 600 ]; then
+    if [ "$(stat -c %a "$file")" -eq 644 ] || [ "$(stat -c %a "$file")" -eq 640 ] || [ "$(stat -c %a "$file")" -eq 600 ]; then
       pass "$check_3_18"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))

@@ -38,9 +38,9 @@ check_1_1_2() {
   starttestjson "$id_1_1_2" "$desc_1_1_2"
 
   totalChecks=$((totalChecks + 1))
-  docker_version=$(docker version | grep -i -A2 '^server' | grep ' Version:' \
-    | awk '{print $NF; exit}' | tr -d '[:alpha:]-,')
-  docker_current_version="$(date +%y.%m.0 -d @$(( $(date +%s) - 2592000)))"
+  docker_version=$(docker version | grep -i -A2 '^server' | grep ' Version:' |
+    awk '{print $NF; exit}' | tr -d '[:alpha:]-,')
+  docker_current_version="$(date +%y.%m.0 -d @$(($(date +%s) - 2592000)))"
   do_version_check "$docker_current_version" "$docker_version"
   if [ $? -eq 11 ]; then
     info "$check_1_1_2"
@@ -203,7 +203,7 @@ check_1_2_5() {
     info "       * Directory not found"
     resulttestjson "INFO" "Directory not found"
     currentScore=$((currentScore + 0))
-fi
+  fi
 }
 
 # 1.2.6

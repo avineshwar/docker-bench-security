@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Returns the absolute path of a given string
-abspath () { case "$1" in /*)printf "%s\n" "$1";; *)printf "%s\n" "$PWD/$1";; esac; }
+abspath() { case "$1" in /*) printf "%s\n" "$1" ;; *) printf "%s\n" "$PWD/$1" ;; esac }
 
 # Audit rules default path
 auditrules="/etc/audit/audit.rules"
@@ -21,8 +21,8 @@ do_version_check() {
 
     [ "$ver1front" = "$1" ] || [ -z "$ver1back" ] && ver1back=0
     [ "$ver2front" = "$2" ] || [ -z "$ver2back" ] && ver2back=0
-      do_version_check "$ver1back" "$ver2back"
-      return $?
+    do_version_check "$ver1back" "$ver2back"
+    return $?
   else
     [ "$1" -gt "$2" ] && return 11 || return 9
   fi
@@ -33,7 +33,7 @@ get_command_line_args() {
   PROC="$1"
 
   for PID in "$(pgrep -f -n "$PROC")"; do
-    tr "\0" " " < /proc/"$PID"/cmdline
+    tr "\0" " " </proc/"$PID"/cmdline
   done
 }
 
@@ -45,24 +45,22 @@ get_command_line_args() {
 get_docker_cumulative_command_line_args() {
   OPTION="$1"
 
-  if ! get_command_line_args "docker daemon" >/dev/null 2>&1 ; then
+  if ! get_command_line_args "docker daemon" >/dev/null 2>&1; then
     line_arg="docker daemon"
   else
     line_arg="dockerd"
   fi
 
   get_command_line_args "$line_arg" |
-  # normalize known long options to their short versions
-  sed \
-    -e 's/\-\-debug/-D/g' \
-    -e 's/\-\-host/-H/g' \
-    -e 's/\-\-log-level/-l/g' \
-    -e 's/\-\-version/-v/g' \
-    |
+    # normalize known long options to their short versions
+    sed \
+      -e 's/\-\-debug/-D/g' \
+      -e 's/\-\-host/-H/g' \
+      -e 's/\-\-log-level/-l/g' \
+      -e 's/\-\-version/-v/g' |
     # normalize parameters separated by space(s) to -O=VALUE
     sed \
-      -e 's/\-\([DHlv]\)[= ]\([^- ][^ ]\)/-\1=\2/g' \
-      |
+      -e 's/\-\([DHlv]\)[= ]\([^- ][^ ]\)/-\1=\2/g' |
     # get the last interesting option
     tr ' ' "\n" |
     grep "^$OPTION" |
@@ -83,7 +81,7 @@ get_docker_effective_command_line_args() {
 }
 
 get_docker_configuration_file() {
-  FILE="$(get_docker_effective_command_line_args '--config-file' | \
+  FILE="$(get_docker_effective_command_line_args '--config-file' |
     sed 's/.*=//g')"
 
   if [ -f "$FILE" ]; then
@@ -108,7 +106,7 @@ get_systemd_service_file() {
 
   if [ -f "/etc/systemd/system/$SERVICE" ]; then
     echo "/etc/systemd/system/$SERVICE"
-  elif systemctl show -p FragmentPath "$SERVICE" 2> /dev/null 1>&2; then
+  elif systemctl show -p FragmentPath "$SERVICE" 2>/dev/null 1>&2; then
     systemctl show -p FragmentPath "$SERVICE" | sed 's/.*=//'
   else
     echo "/usr/lib/systemd/system/$SERVICE"
@@ -116,7 +114,7 @@ get_systemd_service_file() {
 }
 
 yell_info() {
-yell "# ------------------------------------------------------------------------------
+  yell "# ------------------------------------------------------------------------------
 # Docker Bench for Security v$version
 #
 # Docker, Inc. (c) 2015-

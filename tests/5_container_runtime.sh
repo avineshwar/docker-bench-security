@@ -17,7 +17,8 @@ check_running_containers() {
   else
     running_containers=1
     # Make the loop separator be a new-line in POSIX compliant fashion
-    set -f; IFS=$'
+    set -f
+    IFS=$'
   '
   fi
 }
@@ -45,22 +46,22 @@ check_5_1() {
       if [ "$fail" -eq 0 ]; then
         warn "$check_5_1"
         warn "     * No AppArmorProfile Found: $c"
-	no_apparmor_containers="$no_apparmor_containers $c"
+        no_apparmor_containers="$no_apparmor_containers $c"
         fail=1
       else
         warn "     * No AppArmorProfile Found: $c"
-	no_apparmor_containers="$no_apparmor_containers $c"
+        no_apparmor_containers="$no_apparmor_containers $c"
       fi
     fi
   done
   # We went through all the containers and found none without AppArmor
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_1"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_1"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Containers with no AppArmorProfile" "$no_apparmor_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers with no AppArmorProfile" "$no_apparmor_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -87,22 +88,22 @@ check_5_2() {
       if [ "$fail" -eq 0 ]; then
         warn "$check_5_2"
         warn "     * No SecurityOptions Found: $c"
-	no_securityoptions_containers="$no_securityoptions_containers $c"
+        no_securityoptions_containers="$no_securityoptions_containers $c"
         fail=1
       else
         warn "     * No SecurityOptions Found: $c"
-	no_securityoptions_containers="$no_securityoptions_containers $c"
+        no_securityoptions_containers="$no_securityoptions_containers $c"
       fi
     fi
   done
   # We went through all the containers and found none without SELinux
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_2"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_2"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Containers with no SecurityOptions" "$no_securityoptions_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers with no SecurityOptions" "$no_securityoptions_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -123,8 +124,8 @@ check_5_3() {
   caps_containers=""
   for c in "$containers"; do
     container_caps=$(docker inspect --format 'CapAdd={{ .HostConfig.CapAdd}}' "$c")
-    caps=$(echo "$container_caps" | tr "[:lower:]" "[:upper:]" | \
-      sed 's/CAPADD/CapAdd/' | \
+    caps=$(echo "$container_caps" | tr "[:lower:]" "[:upper:]" |
+      sed 's/CAPADD/CapAdd/' |
       sed -r "s/AUDIT_WRITE|CHOWN|DAC_OVERRIDE|FOWNER|FSETID|KILL|MKNOD|NET_BIND_SERVICE|NET_RAW|SETFCAP|SETGID|SETPCAP|SETUID|SYS_CHROOT|\s//g")
 
     if [ "$caps" != 'CapAdd=' ] && [ "$caps" != 'CapAdd=[]' ] && [ "$caps" != 'CapAdd=<no value>' ] && [ "$caps" != 'CapAdd=<nil>' ]; then
@@ -132,22 +133,22 @@ check_5_3() {
       if [ "$fail" -eq 0 ]; then
         warn "$check_5_3"
         warn "     * Capabilities added: $caps to $c"
-	caps_containers="$caps_containers $c"
+        caps_containers="$caps_containers $c"
         fail=1
       else
         warn "     * Capabilities added: $caps to $c"
-	caps_containers="$caps_containers $c"
+        caps_containers="$caps_containers $c"
       fi
     fi
   done
   # We went through all the containers and found none with extra capabilities
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_3"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_3"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Capabilities added for containers" "$caps_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Capabilities added for containers" "$caps_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -174,22 +175,22 @@ check_5_4() {
       if [ "$fail" -eq 0 ]; then
         warn "$check_5_4"
         warn "     * Container running in Privileged mode: $c"
-	privileged_containers="$privileged_containers $c"
+        privileged_containers="$privileged_containers $c"
         fail=1
       else
         warn "     * Container running in Privileged mode: $c"
-	privileged_containers="$privileged_containers $c"
+        privileged_containers="$privileged_containers $c"
       fi
     fi
   done
   # We went through all the containers and found no privileged containers
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_4"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_4"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Containers running in privileged mode" "$privileged_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers running in privileged mode" "$privileged_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -235,23 +236,23 @@ check_5_5() {
         if [ "$fail" -eq 0 ]; then
           warn "$check_5_5"
           warn "     * Sensitive directory $v mounted in: $c"
-	  sensitive_mount_containers="$sensitive_mount_containers $c:$v"
+          sensitive_mount_containers="$sensitive_mount_containers $c:$v"
           fail=1
         else
           warn "     * Sensitive directory $v mounted in: $c"
-	  sensitive_mount_containers="$sensitive_mount_containers $c:$v"
+          sensitive_mount_containers="$sensitive_mount_containers $c:$v"
         fi
       fi
     done
   done
   # We went through all the containers and found none with sensitive mounts
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_5"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_5"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Containers with sensitive directories mounted" "$sensitive_mount_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers with sensitive directories mounted" "$sensitive_mount_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -279,21 +280,21 @@ check_5_6() {
       if [ "$fail" -eq 0 ]; then
         warn "$check_5_6"
         warn "     * Container running sshd: $c"
-	ssh_exec_containers="$ssh_exec_containers $c"
+        ssh_exec_containers="$ssh_exec_containers $c"
         fail=1
         printcheck=1
       else
         warn "     * Container running sshd: $c"
-	ssh_exec_containers="$ssh_exec_containers $c"
+        ssh_exec_containers="$ssh_exec_containers $c"
       fi
     fi
 
     exec_check=$(docker exec "$c" ps -el 2>/dev/null)
     if [ $? -eq 255 ]; then
-        if [ "$printcheck" -eq 0 ]; then
-          warn "$check_5_6"
-          printcheck=1
-        fi
+      if [ "$printcheck" -eq 0 ]; then
+        warn "$check_5_6"
+        printcheck=1
+      fi
       warn "     * Docker exec fails: $c"
       ssh_exec_containers="$ssh_exec_containers $c"
       fail=1
@@ -302,12 +303,12 @@ check_5_6() {
   done
   # We went through all the containers and found none with sshd
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_6"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_6"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Containers with sshd/docker exec failures" "$ssh_exec_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers with sshd/docker exec failures" "$ssh_exec_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -332,28 +333,28 @@ check_5_7() {
 
     # iterate through port range (line delimited)
     for port in "$ports"; do
-    if [ -n "$port" ] && [ "$port" -lt 1024 ]; then
+      if [ -n "$port" ] && [ "$port" -lt 1024 ]; then
         # If it's the first container, fail the test
         if [ "$fail" -eq 0 ]; then
           warn "$check_5_7"
           warn "     * Privileged Port in use: $port in $c"
-	  privileged_port_containers="$privileged_port_containers $c:$port"
+          privileged_port_containers="$privileged_port_containers $c:$port"
           fail=1
         else
           warn "     * Privileged Port in use: $port in $c"
-	  privileged_port_containers="$privileged_port_containers $c:$port"
+          privileged_port_containers="$privileged_port_containers $c:$port"
         fi
       fi
     done
   done
   # We went through all the containers and found no privileged ports
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_7"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_7"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Containers using privileged ports" "$privileged_port_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers using privileged ports" "$privileged_port_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -397,22 +398,22 @@ check_5_9() {
       if [ "$fail" -eq 0 ]; then
         warn "$check_5_9"
         warn "     * Container running with networking mode 'host': $c"
-	net_host_containers="$net_host_containers $c"
+        net_host_containers="$net_host_containers $c"
         fail=1
       else
         warn "     * Container running with networking mode 'host': $c"
-	net_host_containers="$net_host_containers $c"
+        net_host_containers="$net_host_containers $c"
       fi
     fi
   done
   # We went through all the containers and found no Network Mode host
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_9"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 0))
+    pass "$check_5_9"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 0))
   else
-      resulttestjson "WARN" "Containers running with networking mode 'host'" "$net_host_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers running with networking mode 'host'" "$net_host_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -432,7 +433,7 @@ check_5_10() {
   fail=0
   mem_unlimited_containers=""
   for c in "$containers"; do
-    if docker inspect --format '{{ .Config.Memory }}' "$c" 2> /dev/null 1>&2; then
+    if docker inspect --format '{{ .Config.Memory }}' "$c" 2>/dev/null 1>&2; then
       memory=$(docker inspect --format '{{ .Config.Memory }}' "$c")
     else
       memory=$(docker inspect --format '{{ .HostConfig.Memory }}' "$c")
@@ -443,22 +444,22 @@ check_5_10() {
       if [ "$fail" -eq 0 ]; then
         warn "$check_5_10"
         warn "     * Container running without memory restrictions: $c"
-	mem_unlimited_containers="$mem_unlimited_containers $c"
+        mem_unlimited_containers="$mem_unlimited_containers $c"
         fail=1
       else
         warn "     * Container running without memory restrictions: $c"
-	mem_unlimited_containers="$mem_unlimited_containers $c"
+        mem_unlimited_containers="$mem_unlimited_containers $c"
       fi
     fi
   done
   # We went through all the containers and found no lack of Memory restrictions
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_10"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_10"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Container running without memory restrictions" "$mem_unlimited_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Container running without memory restrictions" "$mem_unlimited_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -478,7 +479,7 @@ check_5_11() {
   fail=0
   cpu_unlimited_containers=""
   for c in "$containers"; do
-    if docker inspect --format '{{ .Config.CpuShares }}' "$c" 2> /dev/null 1>&2; then
+    if docker inspect --format '{{ .Config.CpuShares }}' "$c" 2>/dev/null 1>&2; then
       shares=$(docker inspect --format '{{ .Config.CpuShares }}' "$c")
     else
       shares=$(docker inspect --format '{{ .HostConfig.CpuShares }}' "$c")
@@ -499,12 +500,12 @@ check_5_11() {
   done
   # We went through all the containers and found no lack of CPUShare restrictions
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_11"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_11"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Containers running without CPU restrictions" "$cpu_unlimited_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers running without CPU restrictions" "$cpu_unlimited_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -524,29 +525,29 @@ check_5_12() {
   fail=0
   fsroot_mount_containers=""
   for c in "$containers"; do
-   read_status=$(docker inspect --format '{{ .HostConfig.ReadonlyRootfs }}' "$c")
+    read_status=$(docker inspect --format '{{ .HostConfig.ReadonlyRootfs }}' "$c")
 
     if [ "$read_status" = "false" ]; then
       # If it's the first container, fail the test
       if [ "$fail" -eq 0 ]; then
         warn "$check_5_12"
         warn "     * Container running with root FS mounted R/W: $c"
-	fsroot_mount_containers="$fsroot_mount_containers $c"
+        fsroot_mount_containers="$fsroot_mount_containers $c"
         fail=1
       else
         warn "     * Container running with root FS mounted R/W: $c"
-	fsroot_mount_containers="$fsroot_mount_containers $c"
+        fsroot_mount_containers="$fsroot_mount_containers $c"
       fi
     fi
   done
   # We went through all the containers and found no R/W FS mounts
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_12"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_12"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Containers running with root FS mounted R/W" "$fsroot_mount_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers running with root FS mounted R/W" "$fsroot_mount_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -583,12 +584,12 @@ check_5_13() {
   done
   # We went through all the containers and found no ports bound to 0.0.0.0
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_13"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_13"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Containers with port bound to wildcard IP" "$incoming_unbound_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers with port bound to wildcard IP" "$incoming_unbound_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -615,22 +616,22 @@ check_5_14() {
       if [ "$fail" -eq 0 ]; then
         warn "$check_5_14"
         warn "     * MaximumRetryCount is not set to 5: $c"
-	maxretry_unset_containers="$maxretry_unset_containers $c"
+        maxretry_unset_containers="$maxretry_unset_containers $c"
         fail=1
       else
         warn "     * MaximumRetryCount is not set to 5: $c"
-	maxretry_unset_containers="$maxretry_unset_containers $c"
+        maxretry_unset_containers="$maxretry_unset_containers $c"
       fi
     fi
   done
   # We went through all the containers and they all had MaximumRetryCount=5
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_14"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_14"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Containers with MaximumRetryCount not set to 5" "$maxretry_unset_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers with MaximumRetryCount not set to 5" "$maxretry_unset_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -667,12 +668,12 @@ check_5_15() {
   done
   # We went through all the containers and found none with PidMode as host
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_15"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_15"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Containers sharing host PID namespace" "$pidns_shared_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers sharing host PID namespace" "$pidns_shared_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -709,12 +710,12 @@ check_5_16() {
   done
   # We went through all the containers and found none with IPCMode as host
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_16"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_16"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Containers sharing host IPC namespace" "$ipcns_shared_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers sharing host IPC namespace" "$ipcns_shared_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -751,12 +752,12 @@ check_5_17() {
   done
   # We went through all the containers and found none with devices
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_17"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_17"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "INFO" "Containers with host devices exposed directly" "$hostdev_exposed_containers"
-      currentScore=$((currentScore + 0))
+    resulttestjson "INFO" "Containers with host devices exposed directly" "$hostdev_exposed_containers"
+    currentScore=$((currentScore + 0))
   fi
 }
 
@@ -793,12 +794,12 @@ check_5_18() {
   done
   # We went through all the containers and found none without Ulimits
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_18"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_18"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "INFO" "Containers with no default ulimit override" "$no_ulimit_containers"
-      currentScore=$((currentScore + 0))
+    resulttestjson "INFO" "Containers with no default ulimit override" "$no_ulimit_containers"
+    currentScore=$((currentScore + 0))
   fi
 }
 
@@ -818,8 +819,8 @@ check_5_19() {
   fail=0
   mountprop_shared_containers=""
   for c in "$containers"; do
-    if docker inspect --format 'Propagation={{range $mnt := .Mounts}} {{json $mnt.Propagation}} {{end}}' "$c" | \
-     grep shared 2>/dev/null 1>&2; then
+    if docker inspect --format 'Propagation={{range $mnt := .Mounts}} {{json $mnt.Propagation}} {{end}}' "$c" |
+      grep shared 2>/dev/null 1>&2; then
       # If it's the first container, fail the test
       if [ "$fail" -eq 0 ]; then
         warn "$check_5_19"
@@ -834,9 +835,9 @@ check_5_19() {
   done
   # We went through all the containers and found none with shared propagation mode
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_19"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_19"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
     resulttestjson "WARN" "Containers with shared mount propagation" "$mountprop_shared_containers"
     currentScore=$((currentScore - 1))
@@ -876,12 +877,12 @@ check_5_20() {
   done
   # We went through all the containers and found none with UTSMode as host
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_20"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_20"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Containers sharing host UTS namespace" "$utcns_shared_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers sharing host UTS namespace" "$utcns_shared_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -901,7 +902,7 @@ check_5_21() {
   fail=0
   seccomp_disabled_containers=""
   for c in "$containers"; do
-    if docker inspect --format 'SecurityOpt={{.HostConfig.SecurityOpt }}' "$c" | \
+    if docker inspect --format 'SecurityOpt={{.HostConfig.SecurityOpt }}' "$c" |
       grep -E 'seccomp:unconfined|seccomp=unconfined' 2>/dev/null 1>&2; then
       # If it's the first container, fail the test
       if [ "$fail" -eq 0 ]; then
@@ -917,12 +918,12 @@ check_5_21() {
   done
   # We went through all the containers and found none with default secomp profile disabled
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_21"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_21"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Containers with default seccomp profile disabled" "$seccomp_disabled_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers with default seccomp profile disabled" "$seccomp_disabled_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -993,12 +994,12 @@ check_5_24() {
   done
   # We went through all the containers and found none with UTSMode as host
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_24"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_24"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Containers using unexpected cgroup" "$unexpected_cgroup_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers using unexpected cgroup" "$unexpected_cgroup_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -1032,12 +1033,12 @@ check_5_25() {
   done
   # We went through all the containers and found none with capability to acquire additional privileges
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_25"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_25"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Containers without restricted privileges" "$addprivs_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers without restricted privileges" "$addprivs_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -1070,12 +1071,12 @@ check_5_26() {
     fi
   done
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_26"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_26"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Containers without health check" "$nohealthcheck_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers without health check" "$nohealthcheck_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -1114,7 +1115,7 @@ check_5_28() {
   for c in "$containers"; do
     pidslimit="$(docker inspect --format '{{.HostConfig.PidsLimit }}' "$c")"
 
-    if [ "$pidslimit" = "0" ] || [  "$pidslimit" = "<nil>" ] || [  "$pidslimit" = "-1" ]; then
+    if [ "$pidslimit" = "0" ] || [ "$pidslimit" = "<nil>" ] || [ "$pidslimit" = "-1" ]; then
       # If it's the first container, fail the test
       if [ "$fail" -eq 0 ]; then
         warn "$check_5_28"
@@ -1129,12 +1130,12 @@ check_5_28() {
   done
   # We went through all the containers and found all with PIDs limit
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_28"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_28"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Containers without PIDs cgroup limit" "$nopids_limit_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers without PIDs cgroup limit" "$nopids_limit_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -1156,38 +1157,38 @@ check_5_29() {
   networks=$(docker network ls -q 2>/dev/null)
   for net in "$networks"; do
     if docker network inspect --format '{{ .Options }}' "$net" 2>/dev/null | grep "com.docker.network.bridge.name:docker0" >/dev/null 2>&1; then
-      docker0Containers=$(docker network inspect --format='{{ range $k, $v := .Containers }} {{ $k }} {{ end }}' "$net" | \
+      docker0Containers=$(docker network inspect --format='{{ range $k, $v := .Containers }} {{ $k }} {{ end }}' "$net" |
         sed -e 's/^ //' -e 's/  /\n/g' 2>/dev/null)
 
-        if [ -n "$docker0Containers" ]; then
-          if [ "$fail" -eq 0 ]; then
-            info "$check_5_29"
-            fail=1
-          fi
-          for c in "$docker0Containers"; do
-            if [ -z "$exclude" ]; then
-              cName=$(docker inspect --format '{{.Name}}' "$c" 2>/dev/null | sed 's/\///g')
-            else
-              pattern=$(echo "$exclude" | sed 's/,/|/g')
-              cName=$(docker inspect --format '{{.Name}}' "$c" 2>/dev/null | sed 's/\///g' | grep -Ev "$pattern" )
-            fi
-            if [ -n "$cName" ]; then
-              info "     * Container in docker0 network: $cName"
-              docker_network_containers="$docker_network_containers $c:$cName"
-            fi
-          done
+      if [ -n "$docker0Containers" ]; then
+        if [ "$fail" -eq 0 ]; then
+          info "$check_5_29"
+          fail=1
         fi
+        for c in "$docker0Containers"; do
+          if [ -z "$exclude" ]; then
+            cName=$(docker inspect --format '{{.Name}}' "$c" 2>/dev/null | sed 's/\///g')
+          else
+            pattern=$(echo "$exclude" | sed 's/,/|/g')
+            cName=$(docker inspect --format '{{.Name}}' "$c" 2>/dev/null | sed 's/\///g' | grep -Ev "$pattern")
+          fi
+          if [ -n "$cName" ]; then
+            info "     * Container in docker0 network: $cName"
+            docker_network_containers="$docker_network_containers $c:$cName"
+          fi
+        done
+      fi
       currentScore=$((currentScore + 0))
     fi
   done
   # We went through all the containers and found none in docker0 network
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_29"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_29"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "INFO" "Containers using docker0 network" "$docker_network_containers"
-      currentScore=$((currentScore + 0))
+    resulttestjson "INFO" "Containers using docker0 network" "$docker_network_containers"
+    currentScore=$((currentScore + 0))
   fi
 }
 
@@ -1222,12 +1223,12 @@ check_5_30() {
   done
   # We went through all the containers and found none with host's user namespace shared
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_30"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_30"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Containers sharing host user namespace" "$hostns_shared_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers sharing host user namespace" "$hostns_shared_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 
@@ -1262,12 +1263,12 @@ check_5_31() {
   done
   # We went through all the containers and found none with docker.sock shared
   if [ "$fail" -eq 0 ]; then
-      pass "$check_5_31"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_5_31"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Containers sharing docker socket" "$docker_sock_containers"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Containers sharing docker socket" "$docker_sock_containers"
+    currentScore=$((currentScore - 1))
   fi
 }
 

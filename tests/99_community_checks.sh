@@ -23,8 +23,8 @@ check_c_1() {
 
 # check_c_2
 check_c_2() {
-  docker_version=$(docker version | grep -i -A2 '^server' | grep ' Version:' \
-    | awk '{print $NF; exit}' | tr -d '[:alpha:]-,.' | cut -c 1-4)
+  docker_version=$(docker version | grep -i -A2 '^server' | grep ' Version:' |
+    awk '{print $NF; exit}' | tr -d '[:alpha:]-,.' | cut -c 1-4)
   totalChecks=$((totalChecks + 1))
 
   id_c_2="C.2"

@@ -15,7 +15,7 @@ version='1.3.5'
 
 # Setup the paths
 this_path=$(abspath "$0")       ## Path of this file including filename
-myname=$(basename "$this_path")     ## file name of this script.
+myname=$(basename "$this_path") ## file name of this script.
 
 readonly version
 readonly this_path
@@ -26,7 +26,10 @@ export PATH="$PATH:/bin:/sbin:/usr/bin:/usr/local/bin:/usr/sbin/"
 # Check for required program(s)
 req_progs='awk docker grep ss stat'
 for p in "$req_progs"; do
-  command -v "$p" >/dev/null 2>&1 || { printf "%s command not found.\n" "$p"; exit 1; }
+  command -v "$p" >/dev/null 2>&1 || {
+    printf "%s command not found.\n" "$p"
+    exit 1
+  }
 done
 
 # Ensure we can connect to docker daemon
@@ -35,7 +38,7 @@ if ! docker ps -q >/dev/null 2>&1; then
   exit 1
 fi
 
-usage () {
+usage() {
   cat <<EOF
   usage: ${myname} [options]
 
@@ -52,17 +55,22 @@ EOF
 # Get the flags
 # If you add an option here, please
 # remember to update usage() above.
-while getopts bhl:c:e:i:x:t: args
-do
+while getopts bhl:c:e:i:x:t: args; do
   case $args in
-  b) nocolor="nocolor";;
-  h) usage; exit 0 ;;
-  l) logger="$OPTARG" ;;
-  c) check="$OPTARG" ;;
-  e) checkexclude="$OPTARG" ;;
-  i) include="$OPTARG" ;;
-  x) exclude="$OPTARG" ;;
-  *) usage; exit 1 ;;
+    b) nocolor="nocolor" ;;
+    h)
+      usage
+      exit 0
+      ;;
+    l) logger="$OPTARG" ;;
+    c) check="$OPTARG" ;;
+    e) checkexclude="$OPTARG" ;;
+    i) include="$OPTARG" ;;
+    x) exclude="$OPTARG" ;;
+    *)
+      usage
+      exit 1
+      ;;
   esac
 done
 
@@ -92,15 +100,15 @@ logit "Initializing $(date)\n"
 beginjson "$version" "$(date +%s)"
 
 # Load all the tests from tests/ and run them
-main () {
+main() {
   # Get configuration location
   get_docker_configuration_file
 
   # If there is a container with label docker_bench_security, memorize it:
   benchcont="nil"
   for c in "$(docker ps | sed '1d' | awk '{print $NF}')"; do
-    if docker inspect --format '{{ .Config.Labels }}' "$c" | \
-     grep -e 'docker.bench.security' >/dev/null 2>&1; then
+    if docker inspect --format '{{ .Config.Labels }}' "$c" |
+      grep -e 'docker.bench.security' >/dev/null 2>&1; then
       benchcont="$c"
     fi
   done
@@ -108,8 +116,8 @@ main () {
   # get the image id of the docker_bench_security_image, memorize it:
   benchimagecont="nil"
   for c in "$(docker images | sed '1d' | awk '{print $3}')"; do
-    if docker inspect --format '{{ .Config.Labels }}' "$c" | \
-     grep -e 'docker.bench.security' >/dev/null 2>&1; then
+    if docker inspect --format '{{ .Config.Labels }}' "$c" |
+      grep -e 'docker.bench.security' >/dev/null 2>&1; then
       benchimagecont="$c"
     fi
   done

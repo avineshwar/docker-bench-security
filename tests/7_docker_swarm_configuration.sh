@@ -91,7 +91,7 @@ check_7_4() {
   fail=0
   unencrypted_networks=""
   for encnet in "$(docker network ls --filter driver=overlay --quiet)"; do
-    if docker network inspect --format '{{.Name}} {{ .Options }}' "$encnet" | \
+    if docker network inspect --format '{{.Name}} {{ .Options }}' "$encnet" |
       grep -v 'encrypted:' 2>/dev/null 1>&2; then
       # If it's the first container, fail the test
       if [ "$fail" -eq 0 ]; then
@@ -104,12 +104,12 @@ check_7_4() {
   done
   # We went through all the networks and found none that are unencrypted
   if [ "$fail" -eq 0 ]; then
-      pass "$check_7_4"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+    pass "$check_7_4"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
   else
-      resulttestjson "WARN" "Unencrypted overlay networks:" "$unencrypted_networks"
-      currentScore=$((currentScore - 1))
+    resulttestjson "WARN" "Unencrypted overlay networks:" "$unencrypted_networks"
+    currentScore=$((currentScore - 1))
   fi
 }
 
