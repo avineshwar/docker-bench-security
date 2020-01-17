@@ -19,23 +19,23 @@ logit () {
 }
 
 info () {
-  printf "%b\n" "${bldblu}[INFO]${txtrst} $1" | tee -a "$logger"
+  printf "%b\n" "$bldblu[INFO]$txtrst $1" | tee -a "$logger"
 }
 
 pass () {
-  printf "%b\n" "${bldgrn}[PASS]${txtrst} $1" | tee -a "$logger"
+  printf "%b\n" "$bldgrn[PASS]$txtrst $1" | tee -a "$logger"
 }
 
 warn () {
-  printf "%b\n" "${bldred}[WARN]${txtrst} $1" | tee -a "$logger"
+  printf "%b\n" "$bldred[WARN]$txtrst $1" | tee -a "$logger"
 }
 
 note () {
-  printf "%b\n" "${bldylw}[NOTE]${txtrst} $1" | tee -a "$logger"
+  printf "%b\n" "$bldylw[NOTE]$txtrst $1" | tee -a "$logger"
 }
 
 yell () {
-  printf "%b\n" "${bldylw}$1${txtrst}\n"
+  printf "%b\n" "$bldylw$1$txtrst\n"
 }
 
 beginjson () {
@@ -75,7 +75,7 @@ resulttestjson() {
       printf "\"result\": \"%s\", \"details\": \"%s\"}" "$1" "$2" | tee -a "$logger.json" 2>/dev/null 1>&2
   else
       # Result also includes details and a list of items. Add that directly to details and to an array property "items"
-      itemsJson=$(printf "["; ISEP=""; for item in $3; do printf "%s\"%s\"" "$ISEP" "$item"; ISEP=","; done; printf "]")
+      itemsJson=$(printf "["; ISEP=""; for item in "$3"; do printf "%s\"%s\"" "$ISEP" "$item"; ISEP=","; done; printf "]")
       printf "\"result\": \"%s\", \"details\": \"%s: %s\", \"items\": %s}" "$1" "$2" "$3" "$itemsJson" | tee -a "$logger.json" 2>/dev/null 1>&2
   fi
 }

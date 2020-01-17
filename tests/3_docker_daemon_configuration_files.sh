@@ -19,7 +19,7 @@ check_3_1() {
   totalChecks=$((totalChecks + 1))
   file="$(get_systemd_service_file docker.service)"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %u%g $file)" -eq 00 ]; then
+    if [ "$(stat -c %u%g "$file")" -eq 00 ]; then
       pass "$check_3_1"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -47,7 +47,7 @@ check_3_2() {
   totalChecks=$((totalChecks + 1))
   file="$(get_systemd_service_file docker.service)"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %a $file)" -eq 644 ] || [ "$(stat -c %a $file)" -eq 600 ]; then
+    if [ "$(stat -c %a "$file")" -eq 644 ] || [ "$(stat -c %a "$file")" -eq 600 ]; then
       pass "$check_3_2"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -75,7 +75,7 @@ check_3_3() {
   totalChecks=$((totalChecks + 1))
   file="$(get_systemd_service_file docker.socket)"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %u%g $file)" -eq 00 ]; then
+    if [ "$(stat -c %u%g "$file")" -eq 00 ]; then
       pass "$check_3_3"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -103,7 +103,7 @@ check_3_4() {
   totalChecks=$((totalChecks + 1))
   file="$(get_systemd_service_file docker.socket)"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %a $file)" -eq 644 ] || [ "$(stat -c %a $file)" -eq 600 ]; then
+    if [ "$(stat -c %a "$file")" -eq 644 ] || [ "$(stat -c %a "$file")" -eq 600 ]; then
       pass "$check_3_4"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -131,7 +131,7 @@ check_3_5() {
   totalChecks=$((totalChecks + 1))
   directory="/etc/docker"
   if [ -d "$directory" ]; then
-    if [ "$(stat -c %u%g $directory)" -eq 00 ]; then
+    if [ "$(stat -c %u%g "$directory")" -eq 00 ]; then
       pass "$check_3_5"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -159,7 +159,7 @@ check_3_6() {
   totalChecks=$((totalChecks + 1))
   directory="/etc/docker"
   if [ -d "$directory" ]; then
-    if [ "$(stat -c %a $directory)" -eq 755 ] || [ "$(stat -c %a $directory)" -eq 700 ]; then
+    if [ "$(stat -c %a "$directory")" -eq 755 ] || [ "$(stat -c %a "$directory")" -eq 700 ]; then
       pass "$check_3_6"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -189,12 +189,12 @@ check_3_7() {
   if [ -d "$directory" ]; then
     fail=0
     owners=$(find "$directory" -type f -name '*.crt')
-    for p in $owners; do
-      if [ "$(stat -c %u $p)" -ne 0 ]; then
+    for p in "$owners"; do
+      if [ "$(stat -c %u "$p")" -ne 0 ]; then
         fail=1
       fi
     done
-    if [ $fail -eq 1 ]; then
+    if [ "$fail" -eq 1 ]; then
       warn "$check_3_7"
       warn "     * Wrong ownership for $directory"
       resulttestjson "WARN" "Wrong ownership for $directory"
@@ -224,12 +224,12 @@ check_3_8() {
   if [ -d "$directory" ]; then
     fail=0
     perms=$(find "$directory" -type f -name '*.crt')
-    for p in $perms; do
-      if [ "$(stat -c %a $p)" -ne 444 ] && [ "$(stat -c %a $p)" -ne 400 ]; then
+    for p in "$perms"; do
+      if [ "$(stat -c %a "$p")" -ne 444 ] && [ "$(stat -c %a "$p")" -ne 400 ]; then
         fail=1
       fi
     done
-    if [ $fail -eq 1 ]; then
+    if [ "$fail" -eq 1 ]; then
       warn "$check_3_8"
       warn "     * Wrong permissions for $directory"
       resulttestjson "WARN" "Wrong permissions for $directory"
@@ -293,7 +293,7 @@ check_3_10() {
     tlscacert=$(get_docker_effective_command_line_args '--tlscacert' | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
   fi
   if [ -f "$tlscacert" ]; then
-    if [ "$(stat -c %a $tlscacert)" -eq 444 ] || [ "$(stat -c %a $tlscacert)" -eq 400 ]; then
+    if [ "$(stat -c %a "$tlscacert")" -eq 444 ] || [ "$(stat -c %a "$tlscacert")" -eq 400 ]; then
       pass "$check_3_10"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -357,7 +357,7 @@ check_3_12() {
     tlscert=$(get_docker_effective_command_line_args '--tlscert' | sed -n 's/.*tlscert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
   fi
   if [ -f "$tlscert" ]; then
-    if [ "$(stat -c %a $tlscert)" -eq 444 ] || [ "$(stat -c %a $tlscert)" -eq 400 ]; then
+    if [ "$(stat -c %a "$tlscert")" -eq 444 ] || [ "$(stat -c %a "$tlscert")" -eq 400 ]; then
       pass "$check_3_12"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -421,7 +421,7 @@ check_3_14() {
     tlskey=$(get_docker_effective_command_line_args '--tlskey' | sed -n 's/.*tlskey=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
   fi
   if [ -f "$tlskey" ]; then
-    if [ "$(stat -c %a $tlskey)" -eq 400 ]; then
+    if [ "$(stat -c %a "$tlskey")" -eq 400 ]; then
       pass "$check_3_14"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -449,7 +449,7 @@ check_3_15() {
   totalChecks=$((totalChecks + 1))
   file="/var/run/docker.sock"
   if [ -S "$file" ]; then
-    if [ "$(stat -c %U:%G $file)" = 'root:docker' ]; then
+    if [ "$(stat -c %U:%G "$file")" = 'root:docker' ]; then
       pass "$check_3_15"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -477,7 +477,7 @@ check_3_16() {
   totalChecks=$((totalChecks + 1))
   file="/var/run/docker.sock"
   if [ -S "$file" ]; then
-    if [ "$(stat -c %a $file)" -eq 660 ] || [  "$(stat -c %a $file)" -eq 600 ]; then
+    if [ "$(stat -c %a "$file")" -eq 660 ] || [  "$(stat -c %a "$file")" -eq 600 ]; then
       pass "$check_3_16"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -505,7 +505,7 @@ check_3_17() {
   totalChecks=$((totalChecks + 1))
   file="/etc/docker/daemon.json"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %U:%G $file)" = 'root:root' ]; then
+    if [ "$(stat -c %U:%G "$file")" = 'root:root' ]; then
       pass "$check_3_17"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -533,7 +533,7 @@ check_3_18() {
   totalChecks=$((totalChecks + 1))
   file="/etc/docker/daemon.json"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %a $file)" -eq 644 ] || [  "$(stat -c %a $file)" -eq 640 ] || [ "$(stat -c %a $file)" -eq 600 ]; then
+    if [ "$(stat -c %a "$file")" -eq 644 ] || [  "$(stat -c %a "$file")" -eq 640 ] || [ "$(stat -c %a "$file")" -eq 600 ]; then
       pass "$check_3_18"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -561,7 +561,7 @@ check_3_19() {
   totalChecks=$((totalChecks + 1))
   file="/etc/default/docker"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %U:%G $file)" = 'root:root' ]; then
+    if [ "$(stat -c %U:%G "$file")" = 'root:root' ]; then
       pass "$check_3_19"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -589,7 +589,7 @@ check_3_20() {
   totalChecks=$((totalChecks + 1))
   file="/etc/sysconfig/docker"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %U:%G $file)" = 'root:root' ]; then
+    if [ "$(stat -c %U:%G "$file")" = 'root:root' ]; then
       pass "$check_3_20"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -617,7 +617,7 @@ check_3_21() {
   totalChecks=$((totalChecks + 1))
   file="/etc/sysconfig/docker"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %a $file)" -eq 644 ] || [ "$(stat -c %a $file)" -eq 600 ]; then
+    if [ "$(stat -c %a "$file")" -eq 644 ] || [ "$(stat -c %a "$file")" -eq 600 ]; then
       pass "$check_3_21"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -645,7 +645,7 @@ check_3_22() {
   totalChecks=$((totalChecks + 1))
   file="/etc/default/docker"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %a $file)" -eq 644 ] || [ "$(stat -c %a $file)" -eq 600 ]; then
+    if [ "$(stat -c %a "$file")" -eq 644 ] || [ "$(stat -c %a "$file")" -eq 600 ]; then
       pass "$check_3_22"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))

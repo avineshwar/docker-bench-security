@@ -31,12 +31,12 @@ check_4_1() {
     set -f; IFS=$'
   '
     root_containers=""
-    for c in $containers; do
+    for c in "$containers"; do
       user=$(docker inspect --format 'User={{.Config.User}}' "$c")
 
       if [ "$user" = "User=0" ] || [ "$user" = "User=root" ] || [ "$user" = "User=" ] || [ "$user" = "User=[]" ] || [ "$user" = "User=<no value>" ]; then
         # If it's the first container, fail the test
-        if [ $fail -eq 0 ]; then
+        if [ "$fail" -eq 0 ]; then
           warn "$check_4_1"
           warn "     * Running as root: $c"
 	  root_containers="$root_containers $c"
@@ -48,7 +48,7 @@ check_4_1() {
       fi
     done
     # We went through all the containers and found none running as root
-    if [ $fail -eq 0 ]; then
+    if [ "$fail" -eq 0 ]; then
         pass "$check_4_1"
         resulttestjson "PASS"
         currentScore=$((currentScore + 1))
@@ -129,9 +129,9 @@ check_4_6() {
   totalChecks=$((totalChecks + 1))
   fail=0
   no_health_images=""
-  for img in $images; do
+  for img in "$images"; do
     if docker inspect --format='{{.Config.Healthcheck}}' "$img" 2>/dev/null | grep -e "<nil>" >/dev/null 2>&1; then
-      if [ $fail -eq 0 ]; then
+      if [ "$fail" -eq 0 ]; then
         fail=1
         warn "$check_4_6"
       fi
@@ -142,7 +142,7 @@ check_4_6() {
       fi
     fi
   done
-  if [ $fail -eq 0 ]; then
+  if [ "$fail" -eq 0 ]; then
     pass "$check_4_6"
     resulttestjson "PASS"
     currentScore=$((currentScore + 1))
@@ -162,9 +162,9 @@ check_4_7() {
   totalChecks=$((totalChecks + 1))
   fail=0
   update_images=""
-  for img in $images; do
+  for img in "$images"; do
     if docker history "$img" 2>/dev/null | grep -e "update" >/dev/null 2>&1; then
-      if [ $fail -eq 0 ]; then
+      if [ "$fail" -eq 0 ]; then
         fail=1
         info "$check_4_7"
       fi
@@ -175,7 +175,7 @@ check_4_7() {
       fi
     fi
   done
-  if [ $fail -eq 0 ]; then
+  if [ "$fail" -eq 0 ]; then
     pass "$check_4_7"
     resulttestjson "PASS"
     currentScore=$((currentScore + 0))
@@ -208,10 +208,10 @@ check_4_9() {
   totalChecks=$((totalChecks + 1))
   fail=0
   add_images=""
-  for img in $images; do
+  for img in "$images"; do
     if docker history --format "{{ .CreatedBy }}" --no-trunc "$img" | \
       sed '$d' | grep -q 'ADD'; then
-      if [ $fail -eq 0 ]; then
+      if [ "$fail" -eq 0 ]; then
         fail=1
         info "$check_4_9"
       fi
@@ -223,7 +223,7 @@ check_4_9() {
       currentScore=$((currentScore + 0))
     fi
   done
-  if [ $fail -eq 0 ]; then
+  if [ "$fail" -eq 0 ]; then
     pass "$check_4_9"
     resulttestjson "PASS"
     currentScore=$((currentScore + 0))

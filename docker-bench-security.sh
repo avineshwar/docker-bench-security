@@ -15,7 +15,7 @@ version='1.3.5'
 
 # Setup the paths
 this_path=$(abspath "$0")       ## Path of this file including filename
-myname=$(basename "${this_path}")     ## file name of this script.
+myname=$(basename "$this_path")     ## file name of this script.
 
 readonly version
 readonly this_path
@@ -25,7 +25,7 @@ export PATH="$PATH:/bin:/sbin:/usr/bin:/usr/local/bin:/usr/sbin/"
 
 # Check for required program(s)
 req_progs='awk docker grep ss stat'
-for p in $req_progs; do
+for p in "$req_progs"; do
   command -v "$p" >/dev/null 2>&1 || { printf "%s command not found.\n" "$p"; exit 1; }
 done
 
@@ -67,7 +67,7 @@ do
 done
 
 if [ -z "$logger" ]; then
-  logger="${myname}.log"
+  logger="$myname.log"
 fi
 
 # Load output formating
@@ -98,7 +98,7 @@ main () {
 
   # If there is a container with label docker_bench_security, memorize it:
   benchcont="nil"
-  for c in $(docker ps | sed '1d' | awk '{print $NF}'); do
+  for c in "$(docker ps | sed '1d' | awk '{print $NF}')"; do
     if docker inspect --format '{{ .Config.Labels }}' "$c" | \
      grep -e 'docker.bench.security' >/dev/null 2>&1; then
       benchcont="$c"
@@ -107,7 +107,7 @@ main () {
 
   # get the image id of the docker_bench_security_image, memorize it:
   benchimagecont="nil"
-  for c in $(docker images | sed '1d' | awk '{print $3}'); do
+  for c in "$(docker images | sed '1d' | awk '{print $3}')"; do
     if docker inspect --format '{{ .Config.Labels }}' "$c" | \
      grep -e 'docker.bench.security' >/dev/null 2>&1; then
       benchimagecont="$c"
@@ -141,11 +141,11 @@ main () {
     cis
   elif [ -z "$check" ] && [ "$checkexclude" ]; then
     checkexcluded="$(echo ",$checkexclude" | sed -e 's/^/\^/g' -e 's/,/\$|/g' -e 's/$/\$/g')"
-    for c in $(grep -E 'check_[0-9]|check_[a-z]' functions_lib.sh | grep -vE "$checkexcluded"); do
+    for c in "$(grep -E 'check_[0-9]|check_[a-z]' functions_lib.sh | grep -vE "$checkexcluded")"; do
       "$c"
     done
   else
-    for i in $(echo "$check" | sed "s/,/ /g"); do
+    for i in "$(echo "$check" | sed "s/,/ /g")"; do
       if command -v "$i" 2>/dev/null 1>&2; then
         "$i"
       else

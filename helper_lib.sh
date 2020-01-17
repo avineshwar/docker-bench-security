@@ -32,7 +32,7 @@ do_version_check() {
 get_command_line_args() {
   PROC="$1"
 
-  for PID in $(pgrep -f -n "$PROC"); do
+  for PID in "$(pgrep -f -n "$PROC")"; do
     tr "\0" " " < /proc/"$PID"/cmdline
   done
 }
@@ -65,7 +65,7 @@ get_docker_cumulative_command_line_args() {
       |
     # get the last interesting option
     tr ' ' "\n" |
-    grep "^${OPTION}" |
+    grep "^$OPTION" |
     # normalize quoting of values
     sed \
       -e 's/"//g' \

@@ -95,7 +95,7 @@ check_1_2_2() {
   totalChecks=$((totalChecks + 1))
   docker_users=$(getent group docker)
   info "$check_1_2_2"
-  for u in $docker_users; do
+  for u in "$docker_users"; do
     info "       * $u"
   done
   resulttestjson "INFO" "users" "$docker_users"
@@ -143,7 +143,7 @@ check_1_2_4() {
   directory="/var/lib/docker"
   if [ -d "$directory" ]; then
     if command -v auditctl >/dev/null 2>&1; then
-      if auditctl -l | grep $directory >/dev/null 2>&1; then
+      if auditctl -l | grep "$directory" >/dev/null 2>&1; then
         pass "$check_1_2_4"
         resulttestjson "PASS"
         currentScore=$((currentScore + 1))
@@ -180,7 +180,7 @@ check_1_2_5() {
   directory="/etc/docker"
   if [ -d "$directory" ]; then
     if command -v auditctl >/dev/null 2>&1; then
-      if auditctl -l | grep $directory >/dev/null 2>&1; then
+      if auditctl -l | grep "$directory" >/dev/null 2>&1; then
         pass "$check_1_2_5"
         resulttestjson "PASS"
         currentScore=$((currentScore + 1))
@@ -291,7 +291,7 @@ check_1_2_8() {
   file="/etc/default/docker"
   if [ -f "$file" ]; then
     if command -v auditctl >/dev/null 2>&1; then
-      if auditctl -l | grep $file >/dev/null 2>&1; then
+      if auditctl -l | grep "$file" >/dev/null 2>&1; then
         pass "$check_1_2_8"
         resulttestjson "PASS"
         currentScore=$((currentScore + 1))
@@ -328,7 +328,7 @@ check_1_2_9() {
   file="/etc/sysconfig/docker"
   if [ -f "$file" ]; then
     if command -v auditctl >/dev/null 2>&1; then
-      if auditctl -l | grep $file >/dev/null 2>&1; then
+      if auditctl -l | grep "$file" >/dev/null 2>&1; then
         pass "$check_1_2_9"
         resulttestjson "PASS"
         currentScore=$((currentScore + 1))
@@ -365,7 +365,7 @@ check_1_2_10() {
   file="/etc/docker/daemon.json"
   if [ -f "$file" ]; then
     if command -v auditctl >/dev/null 2>&1; then
-      if auditctl -l | grep $file >/dev/null 2>&1; then
+      if auditctl -l | grep "$file" >/dev/null 2>&1; then
         pass "$check_1_2_10"
         resulttestjson "PASS"
         currentScore=$((currentScore + 1))
@@ -402,7 +402,7 @@ check_1_2_11() {
   file="/usr/bin/containerd"
   if [ -f "$file" ]; then
     if command -v auditctl >/dev/null 2>&1; then
-      if auditctl -l | grep $file >/dev/null 2>&1; then
+      if auditctl -l | grep "$file" >/dev/null 2>&1; then
         pass "$check_1_2_11"
         resulttestjson "PASS"
         currentScore=$((currentScore + 1))
@@ -439,7 +439,7 @@ check_1_2_12() {
   file="/usr/sbin/runc"
   if [ -f "$file" ]; then
     if command -v auditctl >/dev/null 2>&1; then
-      if auditctl -l | grep $file >/dev/null 2>&1; then
+      if auditctl -l | grep "$file" >/dev/null 2>&1; then
         pass "$check_1_2_12"
         resulttestjson "PASS"
         currentScore=$((currentScore + 1))

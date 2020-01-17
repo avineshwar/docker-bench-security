@@ -90,11 +90,11 @@ check_7_4() {
   totalChecks=$((totalChecks + 1))
   fail=0
   unencrypted_networks=""
-  for encnet in $(docker network ls --filter driver=overlay --quiet); do
+  for encnet in "$(docker network ls --filter driver=overlay --quiet)"; do
     if docker network inspect --format '{{.Name}} {{ .Options }}' "$encnet" | \
       grep -v 'encrypted:' 2>/dev/null 1>&2; then
       # If it's the first container, fail the test
-      if [ $fail -eq 0 ]; then
+      if [ "$fail" -eq 0 ]; then
         warn "$check_7_4"
         fail=1
       fi
@@ -103,7 +103,7 @@ check_7_4() {
     fi
   done
   # We went through all the networks and found none that are unencrypted
-  if [ $fail -eq 0 ]; then
+  if [ "$fail" -eq 0 ]; then
       pass "$check_7_4"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
